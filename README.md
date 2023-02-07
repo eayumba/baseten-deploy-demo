@@ -1,4 +1,4 @@
-# Baseten Usage Memo
+# Launching a Polydelta Model Using Baseten
 January 30, 2023
 
 ## Overview
