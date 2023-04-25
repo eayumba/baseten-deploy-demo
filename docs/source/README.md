@@ -40,7 +40,7 @@ Follow these steps to deploy the model to Baseten. Once completed, the model can
     1. Once deployed, navigate to Polydelta’s Baseten models page and click the newly created model. In the left "Versions" nav-bar, "Draft" should be selected. Note the “**Call via Baseten Client**” code in the top right corner. The model version ID shown here is used to call the model.
 8. In the first **Test** cell, copy, paste, and refactor preprocessing code (that doesn’t involve other models, covered earlier). Format the `model_input` variable as described. Run this cell.
 9. In the second **Test** cell, paste the model version ID (from the deployed model’s Baseten page) in the specified place. Perform any remaining post-processing here and print/save the output for debugging. Run this cell and ensure the deployed model is outputting expected results.
-10. Test, and re-deploy until the deployed model is outputting expected results. Then in the model's Baseten page, click the 3 dots bythe "Draft" version and select "Promote to primary". Now the model can be called using using the model ID instead of the model version ID. The primary model is also what responds to API calls.
+10. Test, and re-deploy until the deployed model is outputting expected results. Then in the model's Baseten page, click the 3 dots by the "Draft" version and select "Promote to primary". Now the model can be called using using the model ID instead of the model version ID. The primary model is also what responds to API calls.
 
 ## Build App in Baseten
 This step involves creating and refactoring pre and post processing code files, creating a model calling worklet, and creating a view to allow frontend model calls. Once completed: 
