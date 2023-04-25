@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Any
 
 MODEL_BASENAME = "model"
 MODEL_EXTENSIONS = [".joblib", ".pkl", ".pickle"]
@@ -24,7 +24,7 @@ class Model:
         model_file_path = next(path for path in paths if path.exists())
         self._model = joblib.load(model_file_path)
 
-    def preprocess(self, request: Dict) -> Dict:
+    def preprocess(self, model_input: Any) -> Any:
         """
         Incorporate pre-processing required by the model if desired here.
 
@@ -33,30 +33,31 @@ class Model:
         import pickle
         import numpy as np
 
-        with open("data/model/word_vectorizer.pk", "rb") as f:
+        with open("data/word_vectorizer.pk", "rb") as f:
             self.preloaded_word_vectorizer = pickle.load(f)
-        with open("data/model/char_vectorizer.pk", "rb") as f:
+        with open("data/char_vectorizer.pk", "rb") as f:
             self.preloaded_char_vectorizer = pickle.load(f)
 
-        tfidf_word = self.preloaded_word_vectorizer.transform(request["inputs"]).toarray()
-        tfidf_char = self.preloaded_char_vectorizer.transform(request["inputs"]).toarray()
+        tfidf_word = self.preloaded_word_vectorizer.transform(model_input).toarray()
+        tfidf_char = self.preloaded_char_vectorizer.transform(model_input).toarray()
         tfidf_out = np.hstack([tfidf_word, tfidf_char])
 
-        request["inputs"] = tfidf_out
+        model_input = tfidf_out
 
-        return request
+        return model_input
 
-    def postprocess(self, request: Dict) -> Dict:
+    def postprocess(self, model_output: Any) -> Any:
         """
         Incorporate post-processing required by the model if desired here.
         """
-        return request
+        return model_output
 
-    def predict(self, request: Dict) -> Dict[str, List]:
-        response = {}
-        inputs = request["inputs"]
-        result = self._model.predict(inputs)
-        response["predictions"] = result
+    def predict(self, model_input: Any) -> Any:
+        model_output = {}
+        result = self._model.predict(model_input)
+        model_output["predictions"] = result
         if self._supports_predict_proba:
-            response["probabilities"] = self._model.predict_proba(inputs).tolist()
-        return response
+            model_output["probabilities"] = self._model.predict_proba(
+                model_input
+            ).tolist()
+        return model_output
