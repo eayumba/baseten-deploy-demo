@@ -46,14 +46,14 @@ Follow these steps to deploy the model to Baseten. Once completed, the model can
 Combining multiple models into a single deployment to, say, get output from 2 or more models in a single API call is similar to adding pre/post processor models. First follow the steps in the **Deployment** section for the main model being deployed. Then for each additional model being combined with the main model, follow these steps:
 1. Follow steps 4-6 in the **Deployment** section for the additional model.
     1. If the additional model has pre/post processor models, hold off on following those steps until after this model has been added to the main model's truss.
-2. Open the **config.yaml** files of the truss created for the additional model and the main model and navigate to the requirements sections. In the main model truss config's requirements section, add any requirements from the (newly created) additional model's truss config that are not arlready present.
-3. In the main model's truss **config.ymal** requirements section, add any missing requirements needed to load a callable version of the model in code.
+2. Open the **config.yaml** files of the truss created for the additional model and the main model and navigate to the `requirements` sections. In the main model truss config's `requirements` section, add any requirements from the (newly created) additional model's truss config that are not arlready present.
+3. In the main model's truss **config.ymal** `requirements` section, add any missing requirements needed to load a callable version of the model in code.
 4. Copy the additional model's model file(s) into the **data** folder of the main model truss.
 5. The remaining actions are done in the main model truss. In **model.py**: 
     1. Import any modules needed for loading and processing the additional model and its inputs/outputs.
-    2. In the **__init__** function, initialize the additionnal model to **None**, like how the main model is initialized. You may need to add params to the **config.yaml**, note how yaml params are fetched to see how to do this.
-    3. In the **load** function, load a callable version of the additional model and set the additional model's variable (currently **None**) to the loaded model.
-    4. To add the additional model's output to the API's **model_output**, write a function(s) that call the additional model and get its output, then in the **predict** function, add a field to the **model_output** dict. It should be a line like: **model_output['addtl_model_output'] = getAddtlModelOutput(model_input)**.
+    2. In the `__init__` function, initialize the additionnal model to `None`, like how the main model is initialized. You may need to add params to the **config.yaml**, note how yaml params are fetched to see how to do this.
+    3. In the `load` function, load a callable version of the additional model and set the additional model's variable (currently `None`) to the loaded model.
+    4. To add the additional model's output to the API's `model_output`, write a function(s) that call the additional model and get its output, then in the `predict` function, add a field to the `model_output` dict. It should be a line like: `model_output['addtl_model_output'] = getAddtlModelOutput(model_input)`.
 6. Proceed deploying the main model's truss as described in step 7 of **Deployment** above.
 
 ## Build App in Baseten
