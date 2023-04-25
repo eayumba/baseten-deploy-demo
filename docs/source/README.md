@@ -31,16 +31,30 @@ Follow these steps to deploy the model to Baseten. Once completed, the model can
 5. In the **Create** cell, replace occurrences of **model_name**,  following the present convention.
 6. Run the **Import**, **Login**, **Load**, and **Create** cells. A folder called **model_name_truss** should be created.
     1. If the model input preprocessing step (or output post-processing) involves the use of other models, this truss folder needs to be modified as follows: 
-    2. Paste the trained model file(s) of the preprocessor model(s) into the **model_name_truss/data/model** folder.
+    2. Paste the trained model file(s) of the preprocessor model(s) into the **model_name_truss/data** folder.
     3. In the **model_name_truss**, open **model.py**. Copy and refactor the preprocessing code from the model project folder into the `preprocess` function. Include any necessary imports here as well. User input to the model is stored in the `request[“inputs”]` variable.
-    4. If other files are needed **after** a preprocessing model is used and before the input is fed to the model, place these files in the **data/model** folder as well.
+    4. If other files are needed **after** a preprocessing model is used and before the input is fed to the model, place these files in the **data** folder as well.
     5. Look through **model.py** in the **jobs_classifier_truss** folder in **baseten-deploy-demo** for a simple preprocessing example with two preprocessor models. Pre/post processing required imports can be added to the `requirements` section of the truss folder’s **config.yaml**.
-    6. For post-processing models, follow the above steps, instead pasting in any post-processing files used **before** the last post-processing model is used.
+    6. For post-processing models, follow the above steps, instead pasting in any post-processing files used **before** the last post-processing model is used. To combine multiple model outputs into one API call (not pre/post processor models), follow the steps in the **Deployment Extra** section below.
 7. In the “**Deploy**” cell of **baseten-deploy.ipynb**, replace occurrences of `model-name` and run the cell to deploy the `model_name_truss` to Baseten.
     1. Once deployed, navigate to Polydelta’s Baseten models page and click the newly created model. In the left "Versions" nav-bar, "Draft" should be selected. Note the “**Call via Baseten Client**” code in the top right corner. The model version ID shown here is used to call the model.
 8. In the first **Test** cell, copy, paste, and refactor preprocessing code (that doesn’t involve other models, covered earlier). Format the `model_input` variable as described. Run this cell.
 9. In the second **Test** cell, paste the model version ID (from the deployed model’s Baseten page) in the specified place. Perform any remaining post-processing here and print/save the output for debugging. Run this cell and ensure the deployed model is outputting expected results.
 10. Test, and re-deploy until the deployed model is outputting expected results. Then in the model's Baseten page, click the 3 dots by the "Draft" version and select "Promote to primary". Now the model can be called using using the model ID instead of the model version ID. The primary model is also what responds to API calls.
+
+## Deployment Extra: Combining Multiple Models Into Single API Deployment
+Combining multiple models into a single deployment to, say, get output from 2 or more models in a single API call is similar to adding pre/post processor models. First follow the steps in the **Deployment** section for the main model being deployed. Then for each additional model being combined with the main model, follow these steps:
+1. Follow steps 4-6 in the **Deployment** section for the additional model.
+    1. If the additional model has pre/post processor models, hold off on following those steps until after this model has been added to the main model's truss.
+2. Open the **config.yaml** files of the truss created for the additional model and the main model and navigate to the requirements sections. In the main model truss config's requirements section, add any requirements from the (newly created) additional model's truss config that are not arlready present.
+3. In the main model's truss **config.ymal** requirements section, add any missing requirements needed to load a callable version of the model in code.
+4. Copy the additional model's model file(s) into the **data** folder of the main model truss.
+5. The remaining actions are done in the main model truss. In **model.py**: 
+    1. Import any modules needed for loading and processing the additional model and its inputs/outputs.
+    2. In the **__init__** function, initialize the additionnal model to **None**, like how the main model is initialized. You may need to add params to the **config.yaml**, note how yaml params are fetched to see how to do this.
+    3. In the **load** function, load a callable version of the additional model and set the additional model's variable (currently **None**) to the loaded model.
+    4. To add the additional model's output to the API's **model_output**, write a function(s) that call the additional model and get its output, then in the **predict** function, add a field to the **model_output** dict. It should be a line like: **model_output['addtl_model_output'] = getAddtlModelOutput(model_input)**.
+6. Proceed deploying the main model's truss as described in step 7 of **Deployment** above.
 
 ## Build App in Baseten
 This step involves creating and refactoring pre and post processing code files, creating a model calling worklet, and creating a view to allow frontend model calls. Once completed: 
