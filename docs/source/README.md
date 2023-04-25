@@ -14,7 +14,7 @@ Follow these steps to set up the folders and environments needed for deployment.
 3. Create a folder **model_files** in the **model-name-deployment** folder.
 4. From the **baseten-deploy-demo** folder, copy the **baseten-deploy.ipynb** file,  paste it in the **model-name-deployment folder.**
 5. Open a terminal and `cd` into the **model-name-deployment** folder. Then create and activate a conda env **model-name-baseten-deploy** for the project.
-6. Copy the model file(s) from the model’s project folder  (.pkl, .pb, .h5, etc) into the **model_files** folder of the **baseten-demo-project**.
+6. Copy the model file(s) from the model’s project folder  (.pkl, .pb, .h5, etc) into the **model_files** folder of the **model-name-deployment** folder.
 
 ### Baseten Setup
 1. Log in to PolyDelta’s Baseten account, go to the models page, and click “**Deploy your own model**”.
@@ -37,9 +37,10 @@ Follow these steps to deploy the model to Baseten. Once completed, the model can
     5. Look through **model.py** in the **jobs_classifier_truss** folder in **baseten-deploy-demo** for a simple preprocessing example with two preprocessor models. Pre/post processing required imports can be added to the `requirements` section of the truss folder’s **config.yaml**.
     6. For post-processing models, follow the above steps, instead pasting in any post-processing files used **before** the last post-processing model is used.
 7. In the “**Deploy**” cell of **baseten-deploy.ipynb**, replace occurrences of `model-name` and run the cell to deploy the `model_name_truss` to Baseten.
-    1. Once deployed, navigate to Polydelta’s Baseten models page and click the newly created model. Note the “**Call via Baseten Client**” code in the top right corner. The model ID shown here is used to call the model.
+    1. Once deployed, navigate to Polydelta’s Baseten models page and click the newly created model. In the left "Versions" nav-bar, "Draft" should be selected. Note the “**Call via Baseten Client**” code in the top right corner. The model version ID shown here is used to call the model.
 8. In the first **Test** cell, copy, paste, and refactor preprocessing code (that doesn’t involve other models, covered earlier). Format the `model_input` variable as described. Run this cell.
-9. In the second **Test** cell, paste the model ID (from the deployed model’s Baseten page) in the specified place. Perform any remaining post-processing here and print/save the output for debugging. Run this cell and ensure the deployed model is outputting expected results.
+9. In the second **Test** cell, paste the model version ID (from the deployed model’s Baseten page) in the specified place. Perform any remaining post-processing here and print/save the output for debugging. Run this cell and ensure the deployed model is outputting expected results.
+10. Test, and re-deploy until the deployed model is outputting expected results. Then in the model's Baseten page, click the 3 dots by the "Draft" version and select "Promote to primary". Now the model can be called using using the model ID instead of the model version ID. The primary model is also what responds to API calls.
 
 ## Build App in Baseten
 This step involves creating and refactoring pre and post processing code files, creating a model calling worklet, and creating a view to allow frontend model calls. Once completed: 

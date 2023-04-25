@@ -14,7 +14,7 @@ Follow these steps to set up the folders and environments needed for deployment.
 3. Create a folder **model_files** in the **model-name-deployment** folder.
 4. From the **baseten-deploy-demo** folder, copy the **baseten-deploy.ipynb** file,  paste it in the **model-name-deployment folder.**
 5. Open a terminal and `cd` into the **model-name-deployment** folder. Then create and activate a conda env **model-name-baseten-deploy** for the project.
-6. Copy the model file(s) from the model’s project folder  (.pkl, .pb, .h5, etc) into the **model_files** folder of the **baseten-demo-project**.
+6. Copy the model file(s) from the model’s project folder  (.pkl, .pb, .h5, etc) into the **model_files** folder of the **model-name-deployment** folder.
 
 ### Baseten Setup
 1. Log in to PolyDelta’s Baseten account, go to the models page, and click “**Deploy your own model**”.
