@@ -54,6 +54,7 @@ class Model:
 
     def predict(self, model_input: Any) -> Any:
         model_output = {}
+        model_input = model_input['input']
         result = self._model.predict(model_input)
         model_output["predictions"] = result
         if self._supports_predict_proba:
